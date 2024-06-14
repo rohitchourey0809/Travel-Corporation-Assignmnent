@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { ChakraProvider, Box, Heading, Center } from "@chakra-ui/react";
+import GroupForm from "./components/GroupForm";
+import GroupStatus from "./components/GroupStatus";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <Provider store={store}>
+        <Box p={4}>
+          <Center>
+            <Heading mb={4}>Todo List Status Viewer</Heading>
+          </Center>
+          <GroupForm />
+          <GroupStatus />
+        </Box>
+      </Provider>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;
