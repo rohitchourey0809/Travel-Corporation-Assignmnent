@@ -33,18 +33,25 @@ const GroupFormAndStatus = () => {
   const [to, setTo] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
+  const [validationError, setValidationError] = useState("");
   const toast = useToast();
 
   useEffect(() => {
-    if (groups.length) {
+    if (groups.length && !validationError) {
       groups.forEach((group) => {
         dispatch(fetchStatuses(group));
       });
     }
-  }, [groups, dispatch]);
+  }, [groups, dispatch, validationError]);
+
+  useEffect(() => {
+    const error = validateGroups(groups);
+    setValidationError(error);
+  }, [groups]);
 
   const handleAddGroup = () => {
-    if (validateGroup(from, to)) {
+    const error = validateGroup(parseInt(from), parseInt(to));
+    if (!error) {
       dispatch(addGroup({ from: parseInt(from), to: parseInt(to) }));
       setFrom("");
       setTo("");
@@ -58,7 +65,7 @@ const GroupFormAndStatus = () => {
     } else {
       toast({
         title: "Invalid Group Range",
-        description: "Please check the rules.",
+        description: error,
         status: "error",
         duration: 3000,
         position: "top-right",
@@ -85,25 +92,56 @@ const GroupFormAndStatus = () => {
     dispatch(updateGroup(index, { from: updatedFrom, to: updatedTo }));
   };
 
-  const validateGroup = (from, to) => {
-    if (from < 1 || to > 10) return false;
-    const ranges = groups.map((group) => ({ from: group.from, to: group.to }));
-    ranges.push({ from: parseInt(from), to: parseInt(to) });
-    ranges.sort((a, b) => a.from - b.from);
+ const validateGroup = (from, to) => {
+   if (from < 1 || to > 10) return "Group range must be between 1 and 10.";
+   if (from >= to) return "'From' value must be less than 'To' value.";
+
+   const ranges = [...groups, { from, to }].sort((a, b) => a.from - b.from);
+
+   if (ranges[0].from !== 1) return "Groups must start from 1.";
+   if (ranges[ranges.length - 1].to > 10) return "Groups must end at 10.";
+
+   for (let i = 0; i < ranges.length - 1; i++) {
+     if (ranges[i].to + 1 !== ranges[i + 1].from) {
+       return "No gaps are allowed between groups.";
+     }
+   }
+
+   for (let i = 0; i < ranges.length - 1; i++) {
+     if (ranges[i].to >= ranges[i + 1].from) {
+       return "No overlap is allowed between groups.";
+     }
+   }
+
+   return "";
+ };
+
+
+  const validateGroups = (groups) => {
+    if (!groups.length) return "";
+
+    const ranges = [...groups].sort((a, b) => a.from - b.from);
+
+    if (ranges[0].from !== 1) return "Groups must start from 1.";
+    if (ranges[ranges.length - 1].to !== 10) return "Groups must end at 10.";
+
     for (let i = 0; i < ranges.length - 1; i++) {
-      if (ranges[i].to !== ranges[i + 1].from - 1) return false;
+      if (ranges[i].to + 1 !== ranges[i + 1].from) {
+        return "No gaps are allowed between groups.";
+      }
     }
+
     for (let i = 0; i < ranges.length - 1; i++) {
-      if (ranges[i].to >= ranges[i + 1].from) return false;
+      if (ranges[i].to >= ranges[i + 1].from) {
+        return "No overlap is allowed between groups.";
+      }
     }
-    return true;
+
+    return "";
   };
 
   const inputStackDirection = useBreakpointValue({ base: "column", md: "row" });
-  const statusGridColumns = useBreakpointValue({
-    base: "1fr",
-    md: "repeat(auto-fit, minmax(100px, 1fr))",
-  });
+ 
 
   return (
     <Box mb={4} padding={20}>
@@ -204,12 +242,16 @@ const GroupFormAndStatus = () => {
                 backgroundColor="blue.500"
                 textColor="white"
                 onClick={() => setShowStatus(!showStatus)}
+                isDisabled={!!validationError}
               >
                 {showStatus ? "Hide Status" : "Show Status"}
               </Button>
+              {validationError && (
+                <Text color="red.500">{validationError}</Text>
+              )}
             </VStack>
           </GridItem>
-          {showStatus && (
+          {showStatus && !validationError && (
             <GridItem>
               <Box width="100%" p={2} borderWidth="1px" borderRadius="md">
                 <Grid templateColumns="1fr">
@@ -226,15 +268,17 @@ const GroupFormAndStatus = () => {
                           <Grid templateColumns="repeat(auto-fit, minmax(100px, 1fr))">
                             {Array.from(
                               { length: group.to - group.from + 1 },
-                              (_, i) => (
-                                <Text key={i}>
-                                  ({group.from + i})
-                                  {statuses[group.from + i]?.completed
-                                    ? "true"
-                                    : "false"}
+                              (_, i) => group.from + i
+                            ).map((item) => (
+                              <Box key={item}>
+                                <Heading size="sm"> ({item})</Heading>
+                                <Text>
+                                  {statuses[item]?.completed
+                                    ? "True"
+                                    : "False"}
                                 </Text>
-                              )
-                            )}
+                              </Box>
+                            ))}
                           </Grid>
                         </Box>
                       </Flex>
