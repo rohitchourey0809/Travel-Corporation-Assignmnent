@@ -65,6 +65,7 @@ const GroupFormAndStatus = () => {
         isClosable: true,
       });
     }
+    setShowInput(false);
   };
 
   const handleDeleteGroup = (index) => {
@@ -181,32 +182,31 @@ const GroupFormAndStatus = () => {
                     placeholder="To"
                     required
                   />
-                  <Button
-                    backgroundColor="green"
-                    textColor="white"
-                    width={60}
+                  <IconButton
+                    icon={<AddIcon />}
+                    aria-label="Add Group"
+                    backgroundColor="green.500"
+                    color="white"
                     onClick={handleAddGroup}
-                  >
-                    Add Group
-                  </Button>
+                  />
                 </HStack>
               )}
-              <HStack spacing={4} alignItems="center" justify="space-between">
+              {!showInput && (
                 <IconButton
                   icon={<AddIcon />}
                   aria-label="Add Group"
                   backgroundColor="green.500"
                   color="white"
-                  onClick={() => setShowInput(!showInput)}
+                  onClick={() => setShowInput(true)}
                 />
-                <Button
-                  backgroundColor="blue.500"
-                  textColor="white"
-                  onClick={() => setShowStatus(!showStatus)}
-                >
-                  {showStatus ? "Hide Status" : "Show Status"}
-                </Button>
-              </HStack>
+              )}
+              <Button
+                backgroundColor="blue.500"
+                textColor="white"
+                onClick={() => setShowStatus(!showStatus)}
+              >
+                {showStatus ? "Hide Status" : "Show Status"}
+              </Button>
             </VStack>
           </GridItem>
           {showStatus && (
