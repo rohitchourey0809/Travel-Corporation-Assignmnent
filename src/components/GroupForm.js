@@ -123,6 +123,7 @@ const GroupForm = () => {
                 <IconButton
                   icon={<DeleteIcon />}
                   aria-label="Delete Group"
+                  backgroundColor="red"
                   onClick={() => handleDeleteGroup(index)}
                 />
               </HStack>

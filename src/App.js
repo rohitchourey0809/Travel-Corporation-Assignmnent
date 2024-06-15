@@ -11,7 +11,7 @@ const App = () => {
       <Provider store={store}>
         <Box p={4}>
           <Center>
-            <Heading mb={4}>Todo List Status Viewer</Heading>
+            <Heading mb={4}>Group Status Viewer</Heading>
           </Center>
           <GroupForm />
           <GroupStatus />
