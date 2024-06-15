@@ -4,17 +4,19 @@ import GroupForm from "./components/GroupForm";
 import GroupStatus from "./components/GroupStatus";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import GroupFormAndStatus from "./components/GroupFormAndStatus";
 
 const App = () => {
   return (
     <ChakraProvider>
       <Provider store={store}>
         <Box p={4}>
-          <Center>
+          {/* <Center>
             <Heading mb={4}>Group Status Viewer</Heading>
           </Center>
-          <GroupForm />
-          <GroupStatus />
+          <GroupForm /> */}
+          {/* <GroupStatus /> */}
+          <GroupFormAndStatus />
         </Box>
       </Provider>
     </ChakraProvider>

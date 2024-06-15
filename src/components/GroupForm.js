@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
+import GroupStatus from "./GroupStatus";
 
 const GroupForm = () => {
   const dispatch = useDispatch();
@@ -129,6 +130,7 @@ const GroupForm = () => {
               </HStack>
             </motion.div>
           ))}
+          <GroupStatus/>
           <HStack spacing={4} alignItems="center" justify="space-between">
             <Input
               type="number"

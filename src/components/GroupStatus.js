@@ -7,9 +7,9 @@ import {
   List,
   ListItem,
   Center,
-  Flex,
-  Wrap,
-  WrapItem,
+  Grid,
+  GridItem,
+  Text,
 } from "@chakra-ui/react";
 
 const GroupStatus = () => {
@@ -31,41 +31,50 @@ const GroupStatus = () => {
         <Heading as="h2" size="md" mb={4} textAlign="center">
           Group Status
         </Heading>
-        <Center>
-          <Flex direction="column" alignItems="center">
-            <Wrap spacing={4} justify="center" textAlign="center">
-              {groups.map((group, index) => (
-                <WrapItem key={index}>
-                  <Box
-                    mb={4}
-                    p={4}
-                    borderWidth="1px"
-                    borderRadius="md"
-                    width="300px"
-                  >
-                    <Heading as="h3" size="sm" mb={2} textAlign="center">
-                      Group {index + 1}: {group.from === "" ? "" : group.from} -{" "}
-                      {group.to}
-                    </Heading>
-                    <List spacing={2}>
-                      {Array.from(
-                        { length: group.to - group.from + 1 },
-                        (_, i) => (
-                          <ListItem key={i}>
+        <Grid templateColumns="1fr 2fr" gap={6}>
+          {groups.map((group, index) => (
+            <React.Fragment key={index}>
+              <GridItem>
+                <Box
+                  mb={4}
+                  p={4}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  textAlign="center"
+                >
+                  <Heading as="h3" size="sm" mb={2}>
+                    Group {index + 1}: {group.from} - {group.to}
+                  </Heading>
+                </Box>
+              </GridItem>
+              <GridItem>
+                <Box
+                  mb={4}
+                  p={4}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  textAlign="center"
+                >
+                  <List spacing={2}>
+                    {Array.from(
+                      { length: group.to - group.from + 1 },
+                      (_, i) => (
+                        <ListItem key={i}>
+                          <Text>
                             Item {group.from + i}:{" "}
                             {statuses[group.from + i]?.completed
                               ? "true"
                               : "false"}
-                          </ListItem>
-                        )
-                      )}
-                    </List>
-                  </Box>
-                </WrapItem>
-              ))}
-            </Wrap>
-          </Flex>
-        </Center>
+                          </Text>
+                        </ListItem>
+                      )
+                    )}
+                  </List>
+                </Box>
+              </GridItem>
+            </React.Fragment>
+          ))}
+        </Grid>
       </Box>
     </Center>
   );
