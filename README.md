@@ -6,6 +6,10 @@ Group Management Application
 ```
 The Group Management Application is a React-based web application designed to manage groups of numeric ranges. It allows users to add, delete, and update groups dynamically, with validation to ensure no overlaps or gaps between consecutive groups.
 ```
+# Demo
+
+![image](https://github.com/rohitchourey0809/Travel-Corporation-Assignmnent/assets/97465195/bf15a5b1-0bfe-4d0b-8242-cebaa04b71a0)
+
 
 # Features
 
